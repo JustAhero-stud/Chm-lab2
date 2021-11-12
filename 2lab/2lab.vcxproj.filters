@@ -20,11 +20,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="input.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Header.h">
+    <ClInclude Include="Matrix.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="in.txt" />
   </ItemGroup>
 </Project>

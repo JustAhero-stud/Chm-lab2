@@ -1,15 +1,26 @@
-﻿#include "Header.h"
+﻿#include "Matrix.h"
 
 
-void readAllFiles()
+void lab2:: input(ifstream& in)
 {
 	ifstream in("input.txt");
 	// считывание размерности матрицы
 	in >> N;
+	x_k = new vect[N];
+	x_x = new vect[N];
+	for (int i = 0; i < N; i++)
+	{
+		x_x[i] = 0;
+	}
+	for (int i = 0; i < N; i++)
+	norma_f += f[i] * f[i];
+	norma_f = sqrt(norma_f);
+
 	cout << "Size: " << N << endl;
 	// считывание кол-ва стобцов между диаг
 	in >> m;
 	cout << "m: " << m << endl;
+	
 	// выделение памяти под двумерный массив
 	// N строчек и 7 столбцов тк 7 диагональная по заданию
 	matrix = new mat * [N];
@@ -76,7 +87,7 @@ double Iteration(vect* x_k, vect* x_x)
 	return sum_nev;
 }
 
-void fout(int iter, real eps_)
+void lab2:: output(ofstream& out)
 {
 	ofstream out("output.txt");
 	out << "epsilon " << eps_ << endl;
@@ -110,12 +121,10 @@ void fout(int iter, real eps_)
 
 }
 
-void Jacobi(vect* x_k, vect* x_x)
+void lab2:: Jacobi()
 {
-	int iter = 0;
 	for (int i = 0; i < N; i++)
 		x_k[i] = x[i];
-	real eps_ = 1, nevyazka = 0;
 	for (iter = 0; iter <= max_iter && eps_ >= eps; iter++)
 	{
 		nevyazka = Iteration(x_k, x_x);
@@ -124,14 +133,11 @@ void Jacobi(vect* x_k, vect* x_x)
 			x_k[i] = x_x[i];
 	}
 	EPS = eps_;
-	fout(iter, eps_);
 }
-void Zeidel(vect* x_x)
+void lab2:: Zeidel()
 {
-	int iter = 0;
 	for (int i = 0; i < N; i++)
 		x_x[i] = x[i];
-	real eps_ = 1, nevyazka = 0;
 	for (iter = 0; iter <= max_iter && eps_ >= eps; iter++)
 	{
 		nevyazka = Iteration(x_x, x_x);
@@ -140,44 +146,4 @@ void Zeidel(vect* x_x)
 			x_k[i] = x_x[i];
 	}
 	EPS = eps_;
-	fout(iter, eps_);
-}
-
-int main(int argc, char* argv[])
-{
-	// считывание файлa
-	readAllFiles();
-	x_k = new vect[N];
-	x_x = new vect[N];
-	for (int i = 0; i < N; i++)
-	{
-		x_x[i] = 0;
-	}
-	for (int i = 0; i < N; i++)
-		norma_f += f[i] * f[i];
-	norma_f = sqrt(norma_f);
-	cout << "1-Jacobi" << endl << "2-Zeidel" << endl;
-	int a = 0;
-	cin >> a;
-	switch (a) {
-	case 1:
-	{
-		cout << "enter w:" << endl;
-		cin >> w;
-		Jacobi(x_k, x_x);
-		break;
-	}
-	case 2:
-	{
-		cout << "enter w:" << endl;
-		cin >> w;
-		Zeidel(x_x);
-		break;
-	}
-	{
-	default:
-		break;
-	}
-	}
-	return 0;
 }
