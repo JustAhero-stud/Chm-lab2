@@ -1,7 +1,6 @@
 ﻿#include "Header.h"
-//Semen
 
-void readAllFiles()
+void lab2::input(ifstream &in)
 {
 	ifstream in("input.txt");
 	// считывание размерности матрицы
@@ -12,9 +11,9 @@ void readAllFiles()
 	cout << "m: " << m << endl;
 	// выделение памяти под двумерный массив
 	// N строчек и 7 столбцов тк 7 диагональная по заданию
-	matrix = new mat * [N];
+	matrix = new mat *[N];
 	for (int i = 0; i < N; i++)
-		matrix[i][7];
+		matrix[i] = new mat[7];
 	// считывание матрицы в двумерный вектор
 	cout << endl << "Our matrix:\n";
 	for (int i = 0; i < N; i++, cout << endl)
@@ -47,7 +46,7 @@ void readAllFiles()
 	in.close();
 }
 
-double Iteration(vect* x_k, vect* x_x)
+double lab2::Iteration(vect* x_k, vect* x_x)
 {
 	int k_1 = 0, k_2 = 0, jj = 0;
 	real sum = 0, nevyazka = 0, sum_nev = 0, nev = 0;
@@ -76,7 +75,7 @@ double Iteration(vect* x_k, vect* x_x)
 	return sum_nev;
 }
 
-void fout(int iter, real eps_)
+void lab2::fout(int iter, real eps_)
 {
 	ofstream out("output.txt");
 	out << "epsilon " << eps_ << endl;
@@ -110,7 +109,7 @@ void fout(int iter, real eps_)
 
 }
 
-void Jacobi(vect* x_k, vect* x_x)
+void lab2::Jacobi(vect* x_k, vect* x_x)
 {
 	int iter = 0;
 	for (int i = 0; i < N; i++)
@@ -126,7 +125,8 @@ void Jacobi(vect* x_k, vect* x_x)
 	EPS = eps_;
 	fout(iter, eps_);
 }
-void Zeidel(vect* x_x)
+
+void lab2::Zeidel(vect* x_x)
 {
 	int iter = 0;
 	for (int i = 0; i < N; i++)
@@ -142,7 +142,7 @@ void Zeidel(vect* x_x)
 	EPS = eps_;
 	fout(iter, eps_);
 }
-
+/*
 int main(int argc, char* argv[])
 {
 	// считывание файлa
@@ -181,3 +181,4 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
+*/
