@@ -2,10 +2,11 @@
 
 void lab2::input(ifstream &in)
 {
-	ifstream in("input.txt");
 	// считывание размерности матрицы
 	in >> N;
 	cout << "Size: " << N << endl;
+	x_k = new vect[N];
+	x_x = new vect[N];
 	// считывание кол-ва стобцов между диаг
 	in >> m;
 	cout << "m: " << m << endl;
@@ -34,6 +35,13 @@ void lab2::input(ifstream &in)
 		cout << f[i] << " ";
 	}
 	cout << endl;
+	for (int i = 0; i < N; i++)
+	{
+		x_x[i] = 0;
+	}
+	for (int i = 0; i < N; i++)
+		norma_f += f[i] * f[i];
+	norma_f = sqrt(norma_f);
 	// считывание вектора начального приближения
 	x = new vect[N];
 	cout << "X vector: ";
@@ -46,7 +54,7 @@ void lab2::input(ifstream &in)
 	in.close();
 }
 
-double lab2::Iteration(vect* x_k, vect* x_x)
+double lab2::Iteration(vect* xk)
 {
 	int k_1 = 0, k_2 = 0, jj = 0;
 	real sum = 0, nevyazka = 0, sum_nev = 0, nev = 0;
@@ -65,19 +73,18 @@ double lab2::Iteration(vect* x_k, vect* x_x)
 				k_2 = 0;
 			jj = i + j - 3 - m * k_1 + m * k_2;
 			if (jj >= 0 && jj < N)
-				sum += matrix[i][j] * x_k[jj];
+				sum += matrix[i][j] * xk[jj];
 		}
 		nev = f[i] - sum;
-		x_x[i] = x_k[i] + w * nev / matrix[i][3];
+		x_x[i] = xk[i] + w * nev / matrix[i][3];
 		sum_nev += nev * nev;
 	}
 	sum_nev = sqrt(sum_nev);
 	return sum_nev;
 }
 
-void lab2::fout(int iter, real eps_)
+void lab2::fout(ofstream& out)
 {
-	ofstream out("output.txt");
 	out << "epsilon " << eps_ << endl;
 	out << fixed;
 	out.precision(15);
@@ -109,76 +116,31 @@ void lab2::fout(int iter, real eps_)
 
 }
 
-void lab2::Jacobi(vect* x_k, vect* x_x)
+void lab2::Jacobi()
 {
-	int iter = 0;
 	for (int i = 0; i < N; i++)
 		x_k[i] = x[i];
-	real eps_ = 1, nevyazka = 0;
 	for (iter = 0; iter <= max_iter && eps_ >= eps; iter++)
 	{
-		nevyazka = Iteration(x_k, x_x);
+		nevyazka = Iteration(x_k);
 		eps_ = nevyazka / norma_f;
 		for (int i = 0; i < N; i++)
 			x_k[i] = x_x[i];
 	}
 	EPS = eps_;
-	fout(iter, eps_);
 }
 
-void lab2::Zeidel(vect* x_x)
+void lab2::Zeidel()
 {
-	int iter = 0;
 	for (int i = 0; i < N; i++)
 		x_x[i] = x[i];
 	real eps_ = 1, nevyazka = 0;
 	for (iter = 0; iter <= max_iter && eps_ >= eps; iter++)
 	{
-		nevyazka = Iteration(x_x, x_x);
+		nevyazka = Iteration(x_x);
 		eps_ = nevyazka / norma_f;
 		for (int i = 0; i < N; i++)
 			x_k[i] = x_x[i];
 	}
 	EPS = eps_;
-	fout(iter, eps_);
 }
-/*
-int main(int argc, char* argv[])
-{
-	// считывание файлa
-	readAllFiles();
-	x_k = new vect[N];
-	x_x = new vect[N];
-	for (int i = 0; i < N; i++)
-	{
-		x_x[i] = 0;
-	}
-	for (int i = 0; i < N; i++)
-		norma_f += f[i] * f[i];
-	norma_f = sqrt(norma_f);
-	cout << "1-Jacobi" << endl << "2-Zeidel" << endl;
-	int a = 0;
-	cin >> a;
-	switch (a) {
-	case 1:
-	{
-		cout << "enter w:" << endl;
-		cin >> w;
-		Jacobi(x_k, x_x);
-		break;
-	}
-	case 2:
-	{
-		cout << "enter w:" << endl;
-		cin >> w;
-		Zeidel(x_x);
-		break;
-	}
-	{
-	default:
-		break;
-	}
-	}
-	return 0;
-}
-*/
