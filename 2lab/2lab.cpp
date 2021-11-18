@@ -53,7 +53,7 @@ void lab2::input(ifstream &in)
 	cout << endl;
 	in.close();
 }
-
+//dssas
 double lab2::Iteration(vect* xk)
 {
 	int k_1 = 0, k_2 = 0, jj = 0;
